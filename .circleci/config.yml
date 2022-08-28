@@ -87,7 +87,8 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      name: Run backend test
+      - run:
+          name: Run backend test
           command: |
             cd backend
             npm install
@@ -121,7 +122,7 @@ jobs:
   #             --template-file .circleci/files/backend.yml \
   #             #--tags project=your-tag \
   #             # --stack-name "your back-end stack name with workflow id" \
-  #             # --parameter-overrides ID="your workflow id"  
+  #             # --parameter-overrides ID="your workflow id"
   #             exit 1
   #     - run:
   #         name: Ensure front-end infrastructure exist
@@ -130,7 +131,7 @@ jobs:
   #             --template-file .circleci/files/frontend.yml \
   #             #--tags project=your-tag \
   #             # --stack-name "your front-end stack name with workflow id" \
-  #             # --parameter-overrides ID="your workflow id"  
+  #             # --parameter-overrides ID="your workflow id"
   #             exit 1
   #     - run:
   #         name: Add back-end ip to ansible inventory
@@ -256,23 +257,23 @@ jobs:
   #     # Here's where you will add some code to rollback on failure
 
   # cleanup:
-    # docker:
-    #   # Docker image here
-    # steps:
-    #   # Checkout code from git
-    #   - run:
-    #       name: Get old stack workflow id
-    #       command: |
-    #         # your code here
-    #         export OldWorkflowID="the id here"
-    #         export STACKS=[] #put the list of stacks here
-    #   - run:
-    #       name: Remove old stacks and files
-    #       command: |
-    #         if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-    #         then
-    #           # your code here
-    #         fi
+  # docker:
+  #   # Docker image here
+  # steps:
+  #   # Checkout code from git
+  #   - run:
+  #       name: Get old stack workflow id
+  #       command: |
+  #         # your code here
+  #         export OldWorkflowID="the id here"
+  #         export STACKS=[] #put the list of stacks here
+  #   - run:
+  #       name: Remove old stacks and files
+  #       command: |
+  #         if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+  #         then
+  #           # your code here
+  #         fi
 
 workflows:
   default:
