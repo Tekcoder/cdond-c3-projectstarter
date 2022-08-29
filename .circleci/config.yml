@@ -224,8 +224,7 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm install
-            npm run build
+            sudo npm install -g npm
             npm run migrations >> migrations.txt
             cat migrations.txt
       - run:
@@ -234,6 +233,8 @@ jobs:
             if grep -q "has been executed successfully" ~/project/backend/migrations.txt
             then
               curl --insecure https://kvdb.io/5AXh3obPU6vTJ55ohKSBv2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+            else 
+              curl --insecure https://kvdb.io/5AXh3obPU6vTJ55ohKSBv2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '0'
             fi
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
