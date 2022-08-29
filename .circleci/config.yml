@@ -225,7 +225,7 @@ jobs:
           command: |
             cd backend
             npm install -g npm
-            npm config set fund false
+            npm config set fund false --global
             npm run migrations >> migrations.txt
             cat migrations.txt
       - run:
