@@ -227,6 +227,7 @@ jobs:
             cd backend
             npm install
             npm run build
+            npm audit fix --audit-level=critical --force
             npm run migrations >> migrations.txt
       - run:
           name: Send migration results to kvdb
@@ -295,6 +296,7 @@ jobs:
             cd backend
             npm install
             npm run build
+            npm audit fix --audit-level=critical --force
             cd ..
             tar -C backend -czvf artifact.tar.gz .
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
