@@ -1,24 +1,30 @@
 ---
-- name: 'update and upgrade packages.' # sudo apt upgrade
-  become: yes
+- name: "update local apt repo"
+  become: true
   apt:
-    upgrade: yes
     update_cache: yes
-    cache_valid_time: 86400
-- name: remove unneeded deps # sudo apt autoremove
-  become: yes
+
+- name: "upgrade apt packages"
+  become: true
   apt:
-    autoremove: yes
-- name: install deps # sudo apt install nodejs npm
-  become: yes
+    upgrade: true
+  
+- name: "Remove unrequired dependencies"
+  become: true
   apt:
-    name: ['nodejs', 'npm']
-    state: latest
-    update_cache: yes
-- name: install pm2 # sudo npm install pm2 -g
-  become: yes
+    autoremove: true
+  
+
+- name: "Install nodejs and npm"
+  become: true
+  shell:  |
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt install -y nodejs
+    sudo npm install --global n
+    sudo n 13.8.0
+        
+- name: "install pm2"
+  become: true
   npm:
     name: pm2
     global: yes
-    state: latest
-    production: yes

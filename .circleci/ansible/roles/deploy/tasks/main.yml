@@ -1,35 +1,35 @@
 ---
-- name: 'update and upgrade packages.'
-  become: yes
-  apt:
-    upgrade: yes
-    update_cache: yes
-    cache_valid_time: 86400
-- name: remove unneeded deps
-  become: yes
-  apt:
-    autoremove: yes
-- name: install deps
-  become: yes
-  apt:
-    name: ['nodejs', 'npm']
-    state: latest
-    update_cache: yes
-- name: install pm2
-  become: yes
-  npm:
-    name: pm2
-    global: yes
-    state: latest
-    production: yes
-- name: extract artifact
-  become: yes
-  unarchive:
-    src: files/artifact.tar.gz
-    dest: .
-
-- name: start app
-  become: yes
+- name: create app directory
   shell: |
-    pm2 delete all
-    pm2 start npm -- start
+    mkdir -p application
+  args:
+    chdir: ~/
+
+- name: copy artifacts
+  unarchive:
+    src: artifact.tar.gz
+    dest: ~/application
+
+- name: Create npm env file
+  shell: |
+    echo "NODE_ENV=production" > .env
+    echo "VERSION=1" >> .env
+    echo "TYPEORM_CONNECTION=postgres" >> .env
+    echo "TYPEORM_MIGRATIONS_DIR=./src/migrations" >> .env
+    echo "TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts" >> .env
+    echo "TYPEORM_MIGRATIONS=./src/migrations/*.ts" >> .env
+    echo "TYPEORM_HOST=$TYPEORM_HOST" >> .env
+    echo "TYPEORM_PORT=$TYPEORM_PORT" >> .env
+    echo "TYPEORM_USERNAME=$TYPEORM_USERNAME" >> .env
+    echo "TYPEORM_PASSWORD=$TYPEORM_PASSWORD" >> .env
+    echo "TYPEORM_DATABASE=$TYPEORM_DATABASE" >> .env
+  args:
+    chdir: ~/application
+
+- name: install artifacts
+  shell: |
+    sudo npm install
+    sudo pm2 stop default
+    sudo pm2 start npm -- start
+  args:
+    chdir: ~/application
